@@ -51,6 +51,8 @@
     </style>
 </head>
 <body>
+    
+    
 
     <div id="cosito" class="container-fluid idk">
         <div v-if="win" class="text-fluid">
@@ -60,6 +62,7 @@
         <div v-if="lost" class="text-fluid">
             <img src="https://66.media.tumblr.com/b19f96970305f2c045ea08d2e4e9f676/tumblr_pkb39eQzpC1r0b8um_400.gif" alt="">
              <p style="font-size: 5mm;"> And I opp, you lose.</p>
+             
         </div>
 
         
@@ -85,7 +88,7 @@
                 <div class="col-sm-12">
 
                     <!--Teclado-->
-                    <span>{{palabra_generada}}</span>
+                    <span></span>
                     <span v-for="(letra, index) in letras">
                         <button v-on:click="comparar(letra,index)" v-bind:disabled="botones[index]" v-blind:class="{verde:boton_color[index]=='verde',rojo:boton_color[index]=='rojo'}">
                             {{letra}}
@@ -119,7 +122,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 <script>
-    var app = new Vue({
+    var cosito = new Vue({
         el:'#cosito',
         data:{
             game:true,
@@ -132,7 +135,7 @@
             botones:[],
             boton_color:[],
             letras:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            frutas:['manzana','cereza','mora','naranja','fresa','melocoton', 'platano', 'sandia']
+            frutas:['manzana','cereza','mora','naranja','fresa','melocoton', 'platano', 'sandia', 'melon', 'mango', 'pepino', 'papaya']
 
         },
         methods:{
