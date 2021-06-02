@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahorcado UTT</title>
+
+    <style>
+        .idk {
+            background-color: #22202249;
+            margin: 1rem;
+            padding: 1rem;
+            border: 1px solid rgb(0, 0, 0);
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            
+        }
+
+    
+
+
+        ul#horizontal-list li{
+            display:inline;
+        }
+        ul#horizontal-list button{
+            margin-left: 10px;
+            width: 40px;
+        }
+        .cuadro{
+            width: 30px;
+            margin-right: 4px;
+            border: 3px solid #252425;
+            border-radius: 5px;
+            background: rgb(250, 250, 250);
+            
+            height: 30px;
+            text-align: center;
+            padding-top: 3px;
+            padding-left: 3px;
+            font-size: 1em;
+        }
+        .rojo{
+            background-color: red;
+        }
+        .verde{
+            background-color: green;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="cosito" class="container-fluid idk">
+        <div v-if="win" class="text-fluid">
+            <img src="https://kbizoom.com/wp-content/uploads/2018/10/NCT-win-IU239169371.gif" alt="">
+            <p style="font-size: 5mm;"> oi, ganaste, q crack.</p>
+        </div>
+        <div v-if="lost" class="text-fluid">
+            <img src="https://66.media.tumblr.com/b19f96970305f2c045ea08d2e4e9f676/tumblr_pkb39eQzpC1r0b8um_400.gif" alt="">
+             <p style="font-size: 5mm;"> And I opp, you lose.</p>
+        </div>
+
+        
+        <div class="row">
+
+            <div class="col-sm-12">
+                <h3 class="text-center text-info" style="font-family: sans-serif;font-size: 3em; font-weight: bold; margin-bottom: 10px;"> AHORCADO </h3>
+                <h2 style="font-size: larger; font-family: Verdana, Geneva, Tahoma, sans-serif; margin-top: 15px;">Adivina la fruta sino you gonna ripped tonight</h2>
+
+                <!---Letras digitadas-->
+                <ul id="horizontal-list">
+                    <button v-for="item in Pala_Escrita" type="button" class="btn btn-primary cuadro">
+                        <span>{{item}}</span>
+                    </button>
+                </ul>
+
+
+
+            </div> <!--End de la 1ra columna-->
+            
+            <div class="container text-center">
+
+                <div class="col-sm-12">
+
+                    <!--Teclado-->
+                    <span>{{palabra_generada}}</span>
+                    <span v-for="(letra, index) in letras">
+                        <button v-on:click="comparar(letra,index)" v-bind:disabled="botones[index]" v-blind:class="{verde:boton_color[index]=='verde',rojo:boton_color[index]=='rojo'}">
+                            {{letra}}
+                        </button>
+                    </span>
+
+
+
+
+                </div> 
+
+            </div> 
+
+        </div> 
+
+        <div class="idk">
+
+            
+            <label for="" style="margin-left: 1px; font-style: oblique;">ACIERTOS</label>
+            <input type="text" class="form-control" v-model="contadorA" style="margin-right: 4rem; border-radius: 4px;">
+            <label for="" style="margin-right: 1%; font-style: oblique;">ERRORES</label>
+            <input type="text" class="form-control" v-model="contadorE"  style="margin-right: 3.5rem; border-radius: 4px;">
+        
+            <button v-on:click="generarAleatorio" style="border-radius: 3px; font-size: 15px; font-style: oblique;">NUEVO JUEGO</button>
+
+        </div>
+
+    </div>
+    
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el:'#cosito',
+        data:{
+            game:true,
+            win:false,
+            lost:false,
+            contadorA:0,
+            contadorE:0,
+            aleatorio:0,
+            Pala_Escrita:[],
+            botones:[],
+            boton_color:[],
+            letras:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            frutas:['manzana','cereza','mora','naranja','fresa','melocoton', 'platano', 'sandia']
+
+        },
+        methods:{
+            generarAleatorio:function(){
+                this.game = true
+                this.win = false
+                this.lost = false
+                this.Pala_Escrita = []
+                this.contadorA= 0
+                this.contadorE = 0
+                this.boton_color = []
+                this.botones = []
+
+                this.aleatorio = Math.floor(Math.random()*this.frutas.length)
+                for(var i = 0;i<this.frutas[this.aleatorio].length; i++){
+                    this.Pala_Escrita.push('')
+                }
+                return this.aleatorio
+            },
+            comparar:function(caracter, posicion){
+                if(this.game){
+                    contadorFlag = 0
+                    
+                    this.botones[posicion]=true
+                    for(i=0;i<=this.palabra_generada.length;i++){
+                        if(caracter.toLowerCase()==this.palabra_generada[i]){
+                            this.Pala_Escrita[i] = caracter
+                            contadorFlag++
+                            this.contadorA++
+                        }
+                    }
+                    if(contadorFlag==0){
+                        this.contadorE++
+                        this.boton_color[posicion] = 'rojo'
+                    }
+                    else{
+                        this.boton_color[posicion] = 'verde'
+                    }
+
+                    if(this.contadorA==this.palabra_generada.length){
+                        this.win = true
+                        this.game = false
+                    }
+
+                    if(this.contadorE==5){
+                        this.lost = true
+                        this.game = false
+                    }
+                }
+            }
+
+        },
+        computed:{
+            palabra_generada:function(){
+                return this.frutas[this.aleatorio]
+            }
+          
+
+        },
+        created:function(){
+            this.generarAleatorio()
+        }
+    })
+</script>
+
+</html>
